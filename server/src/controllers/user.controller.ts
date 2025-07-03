@@ -1,13 +1,9 @@
 // src/controllers/user.controller.ts
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const createUser = async (data: {
-  f_name: string;
-  l_name: string;
-  phone_num: string;
-}) => {
+export const createUser = async (data: Prisma.userCreateInput) => {
   return await prisma.user.create({ data });
 };
 
