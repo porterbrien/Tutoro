@@ -56,7 +56,6 @@ function App() {
           />
         </div>
       ))}
-
       <Button onClick={handleSave}>Save</Button>
     </div>
   );

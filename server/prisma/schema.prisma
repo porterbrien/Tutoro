@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,9 +7,88 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
+model account {
+  account_id          Int                @id @default(autoincrement()) @db.UnsignedInt
+  house_idhouse       Int                @db.UnsignedInt
+  gps_gps_id          Int                @db.UnsignedInt
+  contacts_contact_id Int                @db.UnsignedInt
+  devices_device_id   Int
+  contacts            contacts           @relation(fields: [contacts_contact_id], references: [contact_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_contacts1")
+  devices             devices            @relation(fields: [devices_device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_devices1")
+  gps_saved_location  gps_saved_location @relation(fields: [gps_gps_id], references: [gps_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_gps1")
+  house               house              @relation(fields: [house_idhouse], references: [idhouse], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_house")
+  medical             medical[]
+
+  @@index([contacts_contact_id], map: "fk_account_contacts1_idx")
+  @@index([devices_device_id], map: "fk_account_devices1_idx")
+  @@index([gps_gps_id], map: "fk_account_gps1_idx")
+  @@index([house_idhouse], map: "fk_account_house_idx")
+}
+
+model contacts {
+  contact_id           Int       @id @default(autoincrement()) @db.UnsignedInt
+  contact_name         String    @db.VarChar(45)
+  contact_phone_number Int
+  relationship_type    String    @db.VarChar(20)
+  account              account[]
+}
+
+model devices {
+  device_id     Int       @id
+  device_type   String    @db.VarChar(45)
+  os            String    @db.VarChar(45)
+  LastLoginTime String    @db.VarChar(45)
+  account       account[]
+}
+
+model gps_saved_location {
+  gps_id      Int       @id @default(autoincrement()) @db.UnsignedInt
+  house__     Int       @map("house_#")
+  street_name String    @db.VarChar(38)
+  city        String    @db.VarChar(45)
+  state       String    @db.VarChar(14)
+  account     account[]
+}
+
+model house {
+  idhouse              Int       @id @default(autoincrement()) @db.UnsignedInt
+  special_instructions String    @db.VarChar(300)
+  entry_info           String    @db.VarChar(300)
+  house_address        String    @db.VarChar(80)
+  account              account[]
+}
+
+model medical {
+  idmedical                       Int             @id @default(autoincrement()) @db.UnsignedInt
+  medical_history                 String          @db.VarChar(45)
+  user_medication_user_medication Int
+  user_allergies_allergy_id       Int
+  account_account_id              Int             @db.UnsignedInt
+  account                         account         @relation(fields: [account_account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_medical_account1")
+  user_allergies                  user_allergies  @relation(fields: [user_allergies_allergy_id], references: [allergy_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_medical_user_allergies1")
+  user_medication                 user_medication @relation(fields: [user_medication_user_medication], references: [user_medication], onDelete: NoAction, onUpdate: NoAction, map: "fk_medical_user_medication1")
+
+  @@index([account_account_id], map: "fk_medical_account1_idx")
+  @@index([user_allergies_allergy_id], map: "fk_medical_user_allergies1_idx")
+  @@index([user_medication_user_medication], map: "fk_medical_user_medication1_idx")
+}
+
+model user {
+  idUser    Int    @id
+  f_name    String @db.VarChar(45)
+  l_name    String @db.VarChar(45)
+  phone_num String @db.VarChar(45)
+}
+
+model user_allergies {
+  allergy_id Int       @id
+  Name       String    @db.VarChar(45)
+  medical    medical[]
+}
+
+model user_medication {
+  user_medication      Int       @id
+  medication_currently String    @db.VarChar(45)
+  previous_medication  String    @db.VarChar(45)
+  medical              medical[]
 }
