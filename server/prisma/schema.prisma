@@ -74,7 +74,7 @@ model medical {
 }
 
 model user {
-  idUser    Int    @id
+  idUser    Int    @id @default(autoincrement())
   f_name    String @db.VarChar(45)
   l_name    String @db.VarChar(45)
   phone_num String @db.VarChar(45)
