@@ -12,13 +12,14 @@ type Field = {
 function App() {
   const [message, setMessage] = useState('');
   const [fields, setFields] = useState<Field[]>([
-    { name: 'firstname', label: 'First Name', value: '' },
-    { name: 'lastname', label: 'Last Name', value: '' },
-    { name: 'gender', label: 'Gender', value: '' },
-  ]);
+    { name: 'f_name', label: 'First Name', value: '' },
+    { name: 'l_name', label: 'Last Name', value: '' },
+    { name: 'phone_num', label: 'Phone Number', value: '' }
+]);
+
 
   useEffect(() => {
-    fetch('http://localhost:3001/')
+    fetch('http://localhost:3001/api/users')
       .then((res) => res.text())
       .then((data) => setMessage(data))
       .catch((err) => setMessage('Error: ' + err.message));
@@ -32,14 +33,39 @@ function App() {
     );
   };
 
-  const handleSave = () => {
-    const payload = fields.reduce((acc, field) => {
-      acc[field.name] = field.value;
-      return acc;
-    }, {} as Record<string, string>);
+const handleSave = async () => {
+  const payload = fields.reduce((acc, field) => {
+    acc[field.name] = field.value;
+    return acc;
+  }, {} as Record<string, string>);
 
-    console.log('Saving to database:', payload);
-  };
+  console.log('Saving to database:', payload);
+
+  try {
+    const response = await fetch('http://localhost:3001/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to save user');
+    }
+
+    const data = await response.json();
+    console.log('User saved:', data);
+    setMessage('User saved successfully!');
+
+    setFields((prev) =>
+      prev.map((field) => ({ ...field, value: '' }))
+    );
+  } catch (error) {
+    console.error('❌ Error saving user:', error);
+    setMessage('Error saving user');
+  }
+};
 
   return (
     <div className="App">
