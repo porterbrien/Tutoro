@@ -1,8 +1,10 @@
 // src/routes/user.routes.ts
 import { Router } from 'express';
 import { createUser, getUsers } from '../controllers/user.controller';
+import { PrismaClient } from '@prisma/client';
 
 const router = Router();
+const prisma = new PrismaClient();
 
 router.post('/', async (req, res) => {
   try {
@@ -14,7 +16,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-//TEST 
+//TEST POST
 router.post('/test', async (_req, res) => {
   try {
     const user = await createUser({
@@ -30,7 +32,6 @@ router.post('/test', async (_req, res) => {
   }
 });
 
-
 router.get('/', async (_req, res) => {
   try {
     const users = await getUsers();
@@ -40,5 +41,33 @@ router.get('/', async (_req, res) => {
     res.status(500).send('Error fetching users');
   }
 });
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { f_name, l_name, phone_num } = req.body;
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { idUser: parseInt(id) },
+      data: { f_name, l_name, phone_num }
+    });
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.user.delete({ where: { idUser: parseInt(id) } });
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
 
 export default router;
