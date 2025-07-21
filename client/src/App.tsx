@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Menu } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 import './App.css';
 import Button from './components/Button';
 import TextBox from './components/TextBox';
@@ -113,7 +113,7 @@ function App() {
           }}
           aria-label="Open Sidebar"
         >
-          ☰
+          <MenuIcon />
         </button>
         <Sidebar users={users} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       </div>
