@@ -115,32 +115,17 @@ function App() {
         >
           <MenuIcon />
         </button>
-        <Sidebar users={users} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <Sidebar
+          users={users}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          onEdit={(user) => {
+            handleEdit(user);
+            setSidebarOpen(false); // optionally close sidebar when editing
+          }}
+          onDelete={handleDelete}
+        />
       </div>
-
-      {fields.map(field => (
-        <div key={field.name} style={{ marginBottom: '12px' }}>
-          <label>{field.label}</label>
-          <TextBox
-            value={field.value}
-            onChange={val => handleChange(field.name, val)}
-            placeholder={field.label}
-          />
-        </div>
-      ))}
-
-      <Button onClick={handleSave}>{editingId ? 'Update' : 'Save'}</Button>
-
-      <hr />
-
-      <h2>Users</h2>
-      {users.map(user => (
-        <div key={user.idUser}>
-          <p>{user.f_name} {user.l_name} ({user.phone_num})</p>
-          <button onClick={() => handleEdit(user)}>Edit</button>
-          <button onClick={() => handleDelete(user.idUser)}>Delete</button>
-        </div>
-      ))}
     </div>
   );
 }
