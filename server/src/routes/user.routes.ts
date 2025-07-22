@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
     const user = await createUser(req.body);
     res.json(user);
   } catch (err) {
-    console.error(err);
+    console.error('❌ Error creating user:', err);
     res.status(500).send('Error creating user');
   }
 });
@@ -46,16 +46,22 @@ router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { f_name, l_name, phone_num } = req.body;
 
+  console.log('🛠️ PUT request body:', req.body);
+  console.log('🆔 ID param:', id);
+
   try {
     const updatedUser = await prisma.user.update({
       where: { idUser: parseInt(id) },
       data: { f_name, l_name, phone_num }
     });
     res.json(updatedUser);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('❌ Error updating user:', error.message);
+    console.error(error);
     res.status(500).json({ error: 'Failed to update user' });
   }
 });
+
 
 
 router.delete('/:id', async (req, res) => {

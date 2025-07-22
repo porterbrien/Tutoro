@@ -94,40 +94,75 @@ function App() {
     }
   };
 
-  return (
-    <div className="App">
+return (
+  <div className="App" style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+    <header style={{ marginBottom: '2rem', textAlign: 'center' }}>
       <h1>Tutoro Dev</h1>
-      <p>{message}</p>
-      <div style={{ position: 'relative' }}>
-        <button
-          onClick={() => setSidebarOpen(true)}
-          style={{
-            position: 'absolute',
-            top: 20,
-            left: 20,
-            background: 'none',
-            border: 'none',
-            fontSize: '24px',
-            cursor: 'pointer',
-            zIndex: 1001,
-          }}
-          aria-label="Open Sidebar"
-        >
-          <MenuIcon />
-        </button>
-        <Sidebar
-          users={users}
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          onEdit={(user) => {
-            handleEdit(user);
-            setSidebarOpen(false); // optionally close sidebar when editing
-          }}
-          onDelete={handleDelete}
-        />
-      </div>
+      <p style={{ color: 'green' }}>{message}</p>
+    </header>
+    <div style={{ position: 'relative' }}>
+      <button
+        onClick={() => setSidebarOpen(true)}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          background: 'none',
+          border: 'none',
+          fontSize: '24px',
+          cursor: 'pointer',
+          zIndex: 1001,
+        }}
+        aria-label="Open Sidebar"
+      >
+        <MenuIcon />
+      </button>
+
+      <Sidebar
+        users={users}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onEdit={(user) => {
+          handleEdit(user);
+          setSidebarOpen(false);
+        }}
+        onDelete={handleDelete}
+      />
     </div>
-  );
-}
+    <main style={{
+      maxWidth: '400px',
+      margin: '2rem auto',
+      padding: '1.5rem',
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+    }}>
+      <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
+        {editingId ? 'Edit User' : 'Add User'}
+      </h2>
+
+      {fields.map(field => (
+        <div key={field.name} style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>
+            {field.label}
+          </label>
+          <TextBox
+            value={field.value}
+            onChange={val => handleChange(field.name, val)}
+            placeholder={field.label}
+          />
+        </div>
+      ))}
+
+      <div style={{ textAlign: 'center' }}>
+        <Button onClick={handleSave}>
+          {editingId ? 'Update' : 'Save'}
+        </Button>
+      </div>
+    </main>
+  </div>
+)};
+
+
 
 export default App;
