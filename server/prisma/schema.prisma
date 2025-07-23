@@ -42,10 +42,10 @@ model devices {
 }
 
 model gps {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement()) @db.UnsignedInt
   latitude  String
   longitude String
-  timestamp DateTime @default(now())
+  timestamp DateTime  @default(now())
   account   account[]
 }
 
