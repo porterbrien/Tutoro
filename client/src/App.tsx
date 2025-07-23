@@ -21,6 +21,7 @@ type User = {
 function App() {
   const [message, setMessage] = useState('');
   const [users, setUsers] = useState<User[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [editingId, setEditingId] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fields, setFields] = useState<Field[]>([
@@ -34,6 +35,33 @@ function App() {
       .then(res => res.json())
       .then(data => setUsers(data))
       .catch(err => setMessage('Error: ' + err.message));
+
+      // for finding the user through GEOlocation API
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const coords = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              };
+              console.log('📍 Location:', coords);
+
+              fetch('http://localhost:3001/api/location', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(coords),
+              })
+                .then(res => res.json())
+                .then(data => console.log('✅ Location saved:', data))
+                .catch(err => console.error('❌ Failed to send location:', err));
+            },
+            (error) => {
+              console.error('❌ Geolocation error:', error);
+            }
+          );
+        } else {
+          console.warn('Geolocation not supported by this browser.');
+      }
   }, []);
 
   const handleChange = (name: string, value: string) => {
@@ -43,6 +71,22 @@ function App() {
   };
 
   const handleSave = async () => {
+
+    const errors: Record<string, string> = {};
+    fields.forEach(field => {
+      if (!field.value.trim()) {
+      errors[field.name] = `${field.label} is required`;
+    }
+  });
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setMessage('Please fill in all required fields');
+      return;
+    }
+
+    setFieldErrors({});
+
     const payload = fields.reduce((acc, field) => {
       acc[field.name] = field.value;
       return acc;
@@ -62,8 +106,7 @@ function App() {
 
       if (!response.ok) throw new Error('Failed to save user');
 
-      // const data = await response.json();
-      setMessage('User saved successfully!');
+      setMessage('User saved successfully');
       setEditingId(null);
 
       const updatedUsers = await fetch('http://localhost:3001/api/users').then(res => res.json());
@@ -71,7 +114,7 @@ function App() {
 
       setFields(fields.map(field => ({ ...field, value: '' })));
     } catch (error) {
-      console.error('❌ Error saving user:', error);
+      console.error('Could not save user:', error);
       setMessage('Error saving user');
     }
   };
@@ -90,7 +133,7 @@ function App() {
       await fetch(`http://localhost:3001/api/users/${id}`, { method: 'DELETE' });
       setUsers(prev => prev.filter(user => user.idUser !== id));
     } catch (error) {
-      console.error('❌ Error deleting user:', error);
+      console.error('could not delete user:', error);
     }
   };
 
@@ -141,18 +184,23 @@ return (
         {editingId ? 'Edit User' : 'Add User'}
       </h2>
 
-      {fields.map(field => (
-        <div key={field.name} style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>
-            {field.label}
-          </label>
-          <TextBox
-            value={field.value}
-            onChange={val => handleChange(field.name, val)}
-            placeholder={field.label}
-          />
-        </div>
-      ))}
+    {fields.map(field => (
+      <div key={field.name} style={{ marginBottom: '16px' }}>
+        <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>
+          {field.label}
+        </label>
+        <TextBox
+          value={field.value}
+          onChange={val => handleChange(field.name, val)}
+          placeholder={field.label}
+        />
+        {fieldErrors[field.name] && (
+          <p style={{ color: 'red', fontSize: '0.9rem', marginTop: '4px' }}>
+            {fieldErrors[field.name]}
+          </p>
+        )}
+      </div>
+    ))}
 
       <div style={{ textAlign: 'center' }}>
         <Button onClick={handleSave}>
