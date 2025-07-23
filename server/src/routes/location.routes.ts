@@ -5,10 +5,11 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post('/', async (req, res) => {
-  const { latitude, longitude } = req.body;
+    // latitude throwing errors for not specifing the type
+  const { latitude, longitude } = req.body as { latitude: number | string; longitude: number | string };
 
   try {
-    const location = await prisma.gps_saved_location.create({
+    const location = await prisma.gps.create({
       data: {
         latitude: latitude.toString(),
         longitude: longitude.toString(),

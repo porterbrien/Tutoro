@@ -12,7 +12,7 @@ DROP TABLE `gps_saved_location`;
 
 -- CreateTable
 CREATE TABLE `gps` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `latitude` VARCHAR(191) NOT NULL,
     `longitude` VARCHAR(191) NOT NULL,
     `timestamp` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
