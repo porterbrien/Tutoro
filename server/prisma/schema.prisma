@@ -15,7 +15,7 @@ model account {
   devices_device_id   Int
   contacts            contacts           @relation(fields: [contacts_contact_id], references: [contact_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_contacts1")
   devices             devices            @relation(fields: [devices_device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_devices1")
-  gps_saved_location  gps_saved_location @relation(fields: [gps_gps_id], references: [gps_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_gps1")
+  gps                 gps                @relation(fields: [gps_gps_id], references: [gps_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_gps1")
   house               house              @relation(fields: [house_idhouse], references: [idhouse], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_house")
   medical             medical[]
 
