@@ -46,7 +46,9 @@ model gps {
   latitude  String
   longitude String
   timestamp DateTime @default(now())
+  account   account[]
 }
+
 
 model house {
   idhouse              Int       @id @default(autoincrement()) @db.UnsignedInt
