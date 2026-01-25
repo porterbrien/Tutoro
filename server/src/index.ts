@@ -9,7 +9,7 @@ import locationRoutes from './routes/location.routes';
 dotenv.config();
 
 const app = express();
-const PORT = 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 app.use(cors());
 app.use(express.json());
@@ -21,6 +21,6 @@ app.get('/', (_req, res) => {
   res.send('API running from the backend 🎉');
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
