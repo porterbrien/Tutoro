@@ -44,7 +44,7 @@ function App() {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
               };
-              console.log('📍 Location:', coords);
+              console.log('Location:', coords);
 
               fetch('http://localhost:3001/api/location', {
                 method: 'POST',
@@ -52,11 +52,11 @@ function App() {
                 body: JSON.stringify(coords),
               })
                 .then(res => res.json())
-                .then(data => console.log('✅ Location saved:', data))
-                .catch(err => console.error('❌ Failed to send location:', err));
+                .then(data => console.log('Location saved:', data))
+                .catch(err => console.error('Failed to send location:', err));
             },
             (error) => {
-              console.error('❌ Geolocation error:', error);
+              console.error('Geolocation error:', error);
             }
           );
         } else {
@@ -71,7 +71,6 @@ function App() {
   };
 
   const handleSave = async () => {
-
     const errors: Record<string, string> = {};
     fields.forEach(field => {
       if (!field.value.trim()) {

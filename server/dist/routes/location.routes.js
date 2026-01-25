@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
         res.json(location);
     }
     catch (error) {
-        console.error('❌ Error saving location:', error);
+        console.error('Error saving location:', error);
         res.status(500).json({ error: 'Failed to save location' });
     }
 });

@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
     const user = await createUser(req.body);
     res.json(user);
   } catch (err) {
-    console.error('❌ Error creating user:', err);
+    console.error('Error creating user:', err);
     res.status(500).send('Error creating user');
   }
 });
@@ -26,7 +26,7 @@ router.post('/test', async (_req, res) => {
     });
     res.json(user);
   } catch (err: any) {
-    console.error('❌ Test user error:', err.message);
+    console.error('Test user error:', err.message);
     console.error(err);
     res.status(500).send('Failed to create test user');
   }
@@ -56,7 +56,7 @@ router.put('/:id', async (req, res) => {
     });
     res.json(updatedUser);
   } catch (error: any) {
-    console.error('❌ Error updating user:', error.message);
+    console.error('Error updating user:', error.message);
     console.error(error);
     res.status(500).json({ error: 'Failed to update user' });
   }
