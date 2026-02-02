@@ -11,7 +11,7 @@ const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const location_routes_1 = __importDefault(require("./routes/location.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/api/location', location_routes_1.default);
@@ -20,5 +20,5 @@ app.get('/', (_req, res) => {
     res.send('API running from the backend 🎉');
 });
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
