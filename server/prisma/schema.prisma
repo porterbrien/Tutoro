@@ -80,6 +80,8 @@ model user {
   f_name    String @db.VarChar(45)
   l_name    String @db.VarChar(45)
   phone_num String @db.VarChar(10)
+  password  String @db.VarChar(255)
+  role      String @db.VarChar(10) @default("client")
 }
 
 model user_allergies {
