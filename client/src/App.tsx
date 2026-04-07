@@ -5,6 +5,7 @@ import SignupPage from './pages/SignupPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import HomePage from './pages/HomePage';
+import VerifyPage from './pages/VerifyPage';
 
 const Unauthorized = () => (
   <div style={{
@@ -54,6 +55,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/verify" element={<VerifyPage />} />
       <Route path="/admin/*" element={
         <ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>
       } />

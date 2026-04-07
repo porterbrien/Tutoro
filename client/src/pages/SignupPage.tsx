@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 function SignupPage() {
   const navigate = useNavigate();
   const [fields, setFields] = useState({
-    f_name: '', l_name: '', phone_num: '', password: '', confirmPassword: '',
+    f_name: '', l_name: '', phone_num: '', email: '', password: '', confirmPassword: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,35 +16,50 @@ function SignupPage() {
   };
 
   const handleSignup = async () => {
-    if (!fields.f_name || !fields.l_name || !fields.phone_num || !fields.password) {
-      setError('All fields are required'); return;
-    }
-    if (fields.phone_num.length !== 10) {
-      setError('Phone number must be 10 digits'); return;
-    }
-    if (fields.password !== fields.confirmPassword) {
-      setError('Passwords do not match'); return;
-    }
-    if (fields.password.length < 8) {
-      setError('Password must be at least 8 characters'); return;
-    }
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, role: 'client' }),
-      });
-      const data = await response.json();
-      if (!response.ok) { setError(data.error || 'Registration failed'); return; }
-      navigate('/login', { state: { message: 'Account created! Please sign in.' } });
-    } catch {
-      setError('Could not connect to server');
-    } finally {
-      setLoading(false);
-    }
-  };
+      if (!fields.f_name || !fields.l_name || !fields.phone_num || !fields.email || !fields.password || !fields.confirmPassword) {
+        setError('All fields are required');
+        return;
+      }
+      if (!fields.email.includes('@')) {
+        setError('Please enter a valid email address');
+        return;
+      }
+      if (fields.phone_num.length !== 10) {
+        setError('Phone number must be 10 digits');
+        return;
+      }
+      if (fields.password !== fields.confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+      if (fields.password.length < 8) {
+        setError('Password must be at least 8 characters');
+        return;
+      }
+      setLoading(true);
+      setError('');
+      try {
+        const response = await fetch(`${API_URL}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            f_name: fields.f_name,
+            l_name: fields.l_name,
+            phone_num: fields.phone_num,
+            email: fields.email,
+            password: fields.password,
+            role: 'client',
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) { setError(data.error || 'Registration failed'); return; }
+        navigate('/login', { state: { message: 'Account created! Please sign in.' } });
+      } catch {
+        setError('Could not connect to server');
+      } finally {
+        setLoading(false);
+      }
+    };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex' }}>
@@ -232,8 +247,16 @@ function SignupPage() {
               <input className="auth-input" type="text" placeholder="10-digit phone number"
                 value={fields.phone_num} onChange={e => handleChange('phone_num', e.target.value)} />
             </div>
-
             <div className="animate delay-3">
+              <label style={{
+                display: 'block', fontFamily: "'DM Sans', sans-serif",
+                fontSize: '0.85rem', fontWeight: 500,
+                color: 'var(--dark)', marginBottom: '0.4rem',
+              }}>Email address</label>
+              <input className="auth-input" type="email" placeholder="your@email.com"
+                value={fields.email} onChange={e => handleChange('email', e.target.value)} />
+            </div>
+            <div className="animate delay-4">
               <label style={{
                 display: 'block', fontFamily: "'DM Sans', sans-serif",
                 fontSize: '0.85rem', fontWeight: 500,
@@ -242,8 +265,7 @@ function SignupPage() {
               <input className="auth-input" type="password" placeholder="Min 8 characters"
                 value={fields.password} onChange={e => handleChange('password', e.target.value)} />
             </div>
-
-            <div className="animate delay-4">
+            <div className="animate delay-5">
               <label style={{
                 display: 'block', fontFamily: "'DM Sans', sans-serif",
                 fontSize: '0.85rem', fontWeight: 500,
@@ -254,7 +276,7 @@ function SignupPage() {
                 onKeyDown={e => e.key === 'Enter' && handleSignup()} />
             </div>
 
-            <div className="animate delay-5">
+            <div className="animate delay-6">
               <button className="auth-btn" onClick={handleSignup} disabled={loading}>
                 {loading ? 'Creating account...' : 'Create account'}
               </button>

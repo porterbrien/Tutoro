@@ -76,12 +76,15 @@ model medical {
 }
 
 model user {
-  idUser    Int    @id @default(autoincrement())
-  f_name    String @db.VarChar(45)
-  l_name    String @db.VarChar(45)
-  phone_num String @db.VarChar(10)
-  password  String @db.VarChar(255)
-  role      String @db.VarChar(10) @default("client")
+  idUser     Int       @id @default(autoincrement())
+  f_name     String    @db.VarChar(45)
+  l_name     String    @db.VarChar(45)
+  phone_num  String    @db.VarChar(10)
+  email      String    @db.VarChar(100) @default("")
+  password   String    @db.VarChar(255)
+  role       String    @db.VarChar(10) @default("client")
+  mfa_code   String?   @db.VarChar(6)
+  mfa_expiry DateTime?
 }
 
 model user_allergies {

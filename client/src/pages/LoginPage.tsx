@@ -15,32 +15,33 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!phone || !password) {
-      setError('Please enter your phone number and password');
+  if (!phone || !password) {
+    setError('Please enter your phone number and password');
+    return;
+  }
+  setLoading(true);
+  setError('');
+  try {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone_num: phone, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.error || 'Login failed');
       return;
     }
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone_num: phone, password }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        setError(data.error || 'Login failed');
-        return;
-      }
-      login(data.token, data.user);
-      if (data.user.role === 'admin') navigate('/admin');
-      else navigate('/client');
-    } catch {
-      setError('Could not connect to server');
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Redirect to verify page with userId and masked email
+    navigate('/verify', {
+      state: { userId: data.userId, email: data.email }
+    });
+  } catch {
+    setError('Could not connect to server');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex' }}>

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `user` ADD COLUMN `email` VARCHAR(100) NOT NULL DEFAULT '',
+    ADD COLUMN `mfa_code` VARCHAR(6) NULL,
+    ADD COLUMN `mfa_expiry` DATETIME(3) NULL;

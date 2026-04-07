@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUsers = exports.createUser = void 0;
-// src/controllers/user.controller.ts
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const createUser = async (data) => {
@@ -10,6 +9,7 @@ const createUser = async (data) => {
             f_name: data.f_name,
             l_name: data.l_name,
             phone_num: data.phone_num,
+            email: data.email ?? '',
             password: data.password ?? '',
             role: data.role ?? 'client',
         }
@@ -23,8 +23,8 @@ const getUsers = async () => {
             f_name: true,
             l_name: true,
             phone_num: true,
+            email: true,
             role: true,
-            // password intentionally excluded — never send it to the frontend
         }
     });
 };
