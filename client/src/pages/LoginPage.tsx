@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import TextBox from '../components/TextBox';
 import Button from '../components/Button';
@@ -88,6 +88,11 @@ function LoginPage() {
           type="password"
         />
       </div>
+
+      <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#555', marginTop: '1rem' }}>
+        Don't have an account?{' '}
+        <Link to="/signup" style={{ color: '#1e3a5f' }}>Create one</Link>
+      </p>
 
       <div style={{ textAlign: 'center' }}>
         <Button onClick={handleLogin}>

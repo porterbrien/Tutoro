@@ -1,41 +1,14 @@
-// src/routes/user.routes.ts
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { createUser, getUsers } from '../controllers/user.controller';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { requireAuth, requireRole } from '../middleware/auth.middleware';
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/', async (req, res) => {
-  try {
-    const user = await createUser(req.body);
-    res.json(user);
-  } catch (err) {
-    console.error('Error creating user:', err);
-    res.status(500).send('Error creating user');
-  }
-});
+router.use(requireAuth as any);
 
-//TEST POST
-router.post('/test', async (_req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash('testpassword', 10);
-    const user = await createUser({
-      f_name: 'Test',
-      l_name: 'User',
-      phone_num: '1234567890',
-      password: hashedPassword
-    });
-    res.json(user);
-  } catch (err: any) {
-    console.error('Test user error:', err.message);
-    console.error(err);
-    res.status(500).send('Failed to create test user');
-  }
-});
-
-router.get('/', async (_req, res) => {
+router.get('/', requireRole('admin') as any, async (_req: Request, res: Response) => {
   try {
     const users = await getUsers();
     res.json(users);
@@ -45,31 +18,32 @@ router.get('/', async (_req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+
+router.put('/:id', requireRole('admin') as any, async (req: Request, res: Response) => {
   const { id } = req.params;
   const { f_name, l_name, phone_num } = req.body;
-
-  console.log('🛠️ PUT request body:', req.body);
-  console.log('🆔 ID param:', id);
 
   try {
     const updatedUser = await prisma.user.update({
       where: { idUser: parseInt(id) },
-      data: { f_name, l_name, phone_num }
+      data: { f_name, l_name, phone_num },
+      select: {
+        idUser: true,
+        f_name: true,
+        l_name: true,
+        phone_num: true,
+        role: true,
+      }
     });
     res.json(updatedUser);
-  } catch (error: any) {
-    console.error('Error updating user:', error.message);
-    console.error(error);
+  } catch (error) {
+    console.error('Error updating user:', error);
     res.status(500).json({ error: 'Failed to update user' });
   }
 });
 
-
-
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireRole('admin') as any, async (req: Request, res: Response) => {
   const { id } = req.params;
-
   try {
     await prisma.user.delete({ where: { idUser: parseInt(id) } });
     res.json({ message: 'User deleted successfully' });
@@ -77,6 +51,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete user' });
   }
 });
-
 
 export default router;

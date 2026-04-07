@@ -3,6 +3,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ClientDashboard from './pages/ClientDashboard';
+import SignupPage from './pages/SignupPage';
+
+
 
 const Unauthorized = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -16,6 +19,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/signup" element={<SignupPage />} />
 
       <Route
         path="/admin/*"

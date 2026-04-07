@@ -1,12 +1,19 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { requireAuth } from '../middleware/auth.middleware';
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/', async (req, res) => {
-    // latitude throwing errors for not specifing the type
-  const { latitude, longitude } = req.body as { latitude: number | string; longitude: number | string };
+router.use(requireAuth as any);
+
+router.post('/', async (req: Request, res: Response) => {
+  const { latitude, longitude } = req.body;
+
+  if (!latitude || !longitude) {
+    res.status(400).json({ error: 'Latitude and longitude are required' });
+    return;
+  }
 
   try {
     const location = await prisma.gps.create({
