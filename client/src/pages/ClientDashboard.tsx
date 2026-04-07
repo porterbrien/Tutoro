@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -9,6 +10,7 @@ function ClientDashboard() {
   const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
   const [statusMessage, setStatusMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -127,6 +129,44 @@ function ClientDashboard() {
                 <p style={{ fontSize: '0.85rem', color: '#6b7280' }}>Your account information</p>
               </div>
             </div>
+            <div
+              onClick={() => navigate('/contacts')}
+              style={{
+                background: 'white', borderRadius: '20px', padding: '1.5rem 2rem',
+                border: '1px solid rgba(0,0,0,0.06)', cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                animation: 'slideUp 0.5s ease 0.5s both',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{
+                  width: '48px', height: '48px', borderRadius: '50%',
+                  background: 'rgba(115,201,184,0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1.3rem',
+                }}>👥</div>
+                <div>
+                  <h3 style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: '1.1rem', fontWeight: 600, color: '#1a1a2e', margin: 0,
+                  }}>My Contacts</h3>
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: '0.85rem', color: '#6b7280', margin: 0,
+                  }}>Manage your emergency contacts and friends</p>
+                </div>
+              </div>
+              <span style={{ color: '#73C9B8', fontSize: '1.2rem' }}>→</span>
+            </div>
 
             <div>
               <div className="info-row">
@@ -216,6 +256,44 @@ function ClientDashboard() {
             }}>
               Contact your caregiver or administrator if you need to update your information or have any questions about your care plan.
             </p>
+          </div>
+          <div
+            onClick={() => navigate('/health')}
+            style={{
+              background: 'white', borderRadius: '20px', padding: '1.5rem 2rem',
+              border: '1px solid rgba(0,0,0,0.06)', cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              animation: 'slideUp 0.5s ease 0.4s both',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
+              (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{
+                width: '48px', height: '48px', borderRadius: '50%',
+                background: 'rgba(201,115,132,0.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1.3rem',
+              }}>❤️</div>
+              <div>
+                <h3 style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: '1.1rem', fontWeight: 600, color: '#1a1a2e', margin: 0,
+                }}>Health Profile</h3>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: '0.85rem', color: '#6b7280', margin: 0,
+                }}>View and update your medical information</p>
+              </div>
+            </div>
+            <span style={{ color: '#c97384', fontSize: '1.2rem' }}>→</span>
           </div>
         </div>
       </div>

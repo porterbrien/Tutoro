@@ -99,3 +99,28 @@ model user_medication {
   previous_medication  String    @db.VarChar(45)
   medical              medical[]
 }
+
+model health_profile {
+  id               Int      @id @default(autoincrement())
+  user_id          Int      @unique
+  medical_history  String   @db.VarChar(1000) @default("")
+  allergies        String   @db.VarChar(500)  @default("")
+  current_medications String @db.VarChar(500) @default("")
+  previous_medications String @db.VarChar(500) @default("")
+  blood_type       String   @db.VarChar(5)    @default("")
+  emergency_notes  String   @db.VarChar(500)  @default("")
+  updated_at       DateTime @updatedAt
+}
+
+model contact_profile {
+  id                Int      @id @default(autoincrement())
+  user_id           Int
+  contact_name      String   @db.VarChar(100) @default("")
+  relationship_type String   @db.VarChar(45)  @default("")
+  phone_number      String   @db.VarChar(15)  @default("")
+  email             String   @db.VarChar(100) @default("")
+  address           String   @db.VarChar(200) @default("")
+  notes             String   @db.VarChar(500) @default("")
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+}

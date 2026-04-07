@@ -5,6 +5,9 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/user.routes';
 import locationRoutes from './routes/location.routes';
 import authRoutes from './routes/auth.routes';
+import healthRoutes from './routes/health.routes';
+import contactsRoutes from './routes/contacts.routes';
+
 
 dotenv.config();
 
@@ -27,8 +30,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes after middleware
 app.use('/api/auth', authRoutes);
-app.use('/api/location', locationRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/location', locationRoutes);
+app.use('/api/health', healthRoutes);
+app.use('/api/contacts', contactsRoutes);
 
 app.get('/', (_req, res) => {
   res.send('API running from the backend 🎉');

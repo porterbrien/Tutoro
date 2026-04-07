@@ -6,6 +6,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import HomePage from './pages/HomePage';
 import VerifyPage from './pages/VerifyPage';
+import HealthPage from './pages/HealthPage';
+import ContactsPage from './pages/ContactsPage';
 
 const Unauthorized = () => (
   <div style={{
@@ -59,6 +61,22 @@ function App() {
       <Route path="/admin/*" element={
         <ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>
       } />
+      <Route
+        path="/health"
+        element={
+          <ProtectedRoute requiredRole="client">
+            <HealthPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/contacts"
+        element={
+          <ProtectedRoute requiredRole="client">
+            <ContactsPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/client/*" element={
         <ProtectedRoute requiredRole="client"><ClientDashboard /></ProtectedRoute>
       } />
